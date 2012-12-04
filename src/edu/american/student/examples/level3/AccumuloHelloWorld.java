@@ -17,36 +17,36 @@
  */
 package edu.american.student.examples.level3;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.apache.accumulo.core.client.mapreduce.AccumuloInputFormat;
-import org.apache.accumulo.core.client.mapreduce.AccumuloOutputFormat;
-import org.apache.accumulo.core.data.Key;
-import org.apache.accumulo.core.data.Value;
-import org.apache.accumulo.core.util.Pair;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 
+import edu.american.student.conf.Constants;
 import edu.american.student.conf.HadoopJobConfiguration;
 import edu.american.student.exception.HadoopException;
 import edu.american.student.exception.RepositoryException;
+import edu.american.student.exception.StopMapperException;
 import edu.american.student.foreman.AccumuloForeman;
 import edu.american.student.foreman.HadoopForeman;
 
 /**
  * Difficulty: 3 - Intermediate
  * Full Explanation: FIXME
- * Relevant Files: example-resources/sortme.txt
- * Uses: Hadoop 1.0.3
+ * Relevant Files: example-resources/hello_world.txt
+ * Uses: Hadoop 1.0.3, Accumulo 1.4.1
  * 
- * Short Description: Each node in the cluster will print out the piece it got.
- * The key is what Hadoop considers the line number. The value is the text at that position.
- * The Mapper will break down the line into several numbers and sent lineNumber:number pairs to the Reducer.
+ * Short Description: Each Mapper will grab a line of text from hello_world.txt.
+ * It calculates the first character, and the length of the line.
  * 
- * The Reducer then will grab all the key-values with the same key (same line number), then sort the list. 
- * Printing out the largest value in the list per line
+ * An entry in the default table of accumulo for each mapper is created;
+ * ROW= <Line Number>
+ * COLUMN FAMILY= "LINE"
+ * COLUMN QUALIFIER= <First Character>
+ * VALUE= <line length>
  * @author cam
  *
  */
@@ -57,22 +57,56 @@ public class AccumuloHelloWorld
 	
 	public static void main(String[] args) throws HadoopException, RepositoryException
 	{
+		//Connect to the Accumulo Foreman
 		aForeman.connect();
-		HadoopForeman hForeman = new HadoopForeman();
+		
 		HadoopJobConfiguration conf = new HadoopJobConfiguration();
-		conf.setJobName(HadoopJobConfiguration.buildJobName(AccumuloHelloWorld.class));
-		// conf.setMapperClass(BaseNetworkBuilderMapper.class);
-		// conf.overrideDefaultTable(AccumuloForeman.getArtifactRepositoryName());
-		Collection<Pair<Text, Text>> cfPairs = new ArrayList<Pair<Text, Text>>();
-		// cfPairs.add(new Pair<Text, Text>(new Text(artifact.getArtifactId()), null));
-		conf.setFetchColumns(cfPairs);
-		conf.setInputFormatClass(AccumuloInputFormat.class);
-		conf.setOutputFormatClass(AccumuloOutputFormat.class);
+		conf.setJobName(HadoopJobConfiguration.buildJobName(AccumuloHelloWorld.class));	
+		conf.setMapperClass(AccumuloHelloWorldMapper.class);
+		conf.setInputFormatClass(TextInputFormat.class);
+		conf.overridePathToProcess(new Path("example-resources/hello_world.txt"));
+		
+	
+		conf.setOutputFormatClass(NullOutputFormat.class);
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(IntWritable.class);
+		
+		HadoopForeman hForeman = new HadoopForeman();
 		hForeman.runJob(conf);
 	}
 	
-	public static class AccumuloHelloWorldMapper extends Mapper<Key, Value, Writable, Writable>
+	/**
+	 * Every Mapper gets a line of text, it then does simple calculation and inserts a row into the default table
+	 * @author cam
+	 *
+	 */
+	public static class AccumuloHelloWorldMapper extends Mapper<LongWritable, Text, Text, IntWritable>
 	{
-	
+		@Override
+		public void map(LongWritable ik, Text iv, Context context)
+		{
+			long lineNumber = ik.get(); 
+			String data = iv.toString(); 
+			
+
+			String row = lineNumber+"";
+			String fam = "LINE";
+			String qual = data.charAt(0)+"";
+			String value = data.length()+"";
+			//Add an entry for every line in the default accumulo table
+			// ROW:lineNumber LINE:firstCharacter VALUE:lineLength
+			
+			try
+			{
+				System.out.println("Writing: "+row+" | "+fam+":"+qual+" "+value);
+				aForeman.add(Constants.DEFAULT_TABLE.getName(), row, fam, qual, value);
+			}
+			catch (RepositoryException e)
+			{
+				String gripe = "Couldn't write to accumulo!";
+				throw new StopMapperException(gripe,e);
+			}
+		}
 	}
+	
 }

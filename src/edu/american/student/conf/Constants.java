@@ -7,7 +7,8 @@ public enum Constants
 	DEFAULT_ACCUMULO_USER("root"),
 	DEFAULT_ACCUMULO_PASSWORD("pass"),
 	DEFAULT_ZOOKEEPER_INSTANCE_NAME("zkInstance"),
-	DEFAULT_ZOOKEEPER_INSTANCE("localhost");
+	DEFAULT_ZOOKEEPER_INSTANCE("localhost"),
+	DEFAULT_ACCUMULO_INSTANCE("main");
 
 	private String name = "";
 
@@ -53,8 +54,7 @@ public enum Constants
 
 	public static String getAccumuloInstance()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return DEFAULT_ACCUMULO_INSTANCE.getName();
 	}
 
 }
