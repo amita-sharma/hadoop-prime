@@ -22,6 +22,7 @@ import java.util.Iterator;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -61,18 +62,30 @@ public class HadoopLargestNumber
 		conf.setInputFormatClass(TextInputFormat.class);
 		conf.overridePathToProcess(new Path("example-resources/sortme.txt"));
 
-		
+		/*This time, we have a Reducer. It doesn't write files or anything,
+		 * So NullOutputFormat is what we choose.
+		 * The Reducer need to know what kind of key-value pairs I should expect.
+		 * Because we are passing it a line number as a key, its KeyClass is IntWritable
+		 * Each line number will have several numbers that have been parsed out of the line
+		 * So each value passed to a single reducer will also be an integer, its ValueClass is IntWritable
+		 */
 		conf.setOutputFormatClass(NullOutputFormat.class);
 		conf.setOutputKeyClass(IntWritable.class);
 		conf.setOutputValueClass(IntWritable.class);
-		conf.setNumReduceTasks(1);
+		conf.setNumReduceTasks(1); //Tell Hadoop that a Reducer exists
 
-		// Ask the Hadoop Foreman to schedule this job
 		HadoopForeman hForeman = new HadoopForeman();
 		hForeman.runJob(conf);
 		System.out.println("Hadoop Job Complete.");
 	}
 
+	/**
+	 * Each Mapper's responsibility is to grab a line from the file and parse it into several numbers.
+	 * Each line contains a comma delimited set of numbers.
+	 * Then the Mapper sends these numbers to the reducer
+	 * @author cam
+	 *
+	 */
 	public static class HadoopLargestNumberMapper extends Mapper<LongWritable, Text, IntWritable, IntWritable>
 	{
 		@Override
@@ -91,12 +104,14 @@ public class HadoopLargestNumber
 				IntWritable valueToSend = new IntWritable(Integer.parseInt(number));
 				try
 				{
-					context.write(keyToSend, valueToSend);
+					//the context is simply an interface to the Reducer
+					context.write(keyToSend, valueToSend);// sends [lineNumber: individualNumberParsed] to the reducer
 				}
-				catch (Exception e)
+				catch (Exception e)// Oh no!
 				{
 					String gripe = "Could not write to context!";
-					throw new StopMapperException(gripe,e);
+					throw new StopMapperException(gripe,e); // A StopMapperException is analogous to a RuntimeException
+															 // Hadoop will cease processing
 				}
 
 			}
@@ -104,22 +119,31 @@ public class HadoopLargestNumber
 		}
 	}
 
-	public static class HadoopLargestNumberReducer extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable>
+	/**
+	 * This defines our Reducer. Notice what is inbetween the <>.
+	 * The order says, I Should expect an IntWritable key and (several) IntWritable values
+	 * The remaining pair says that each Reducer will not write to files, or send their results elsewhere
+	 * @author cam
+	 *
+	 */
+	public static class HadoopLargestNumberReducer extends Reducer<IntWritable, IntWritable, NullWritable, NullWritable>
 	{
 		@Override
 		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context)
 		{
+			//its given a line number, and a list of numbers from that line
 			int lineNumber = key.get();
 			int maxValue = Integer.MIN_VALUE;
-			Iterator<IntWritable> iterator = values.iterator();
-			while(iterator.hasNext())
+			Iterator<IntWritable> iterator = values.iterator(); //Don't be freaked out by this, its essentially a list of values
+			while(iterator.hasNext()) // while there are more values in the list
 			{
-				int indexedNumber = iterator.next().get();
-				if(indexedNumber > maxValue)
+				int indexedNumber = iterator.next().get(); //grab the next value
+				if(indexedNumber > maxValue)//compare
 				{
 					maxValue = indexedNumber;
 				}
 			}
+			//print out largest number by line number
 			System.out.println("Line #:"+lineNumber+" Max Value:"+maxValue);
 		}
 	}

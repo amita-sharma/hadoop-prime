@@ -51,4 +51,10 @@ public enum Constants
 		return DEFAULT_ZOOKEEPER_INSTANCE.getName();
 	}
 
+	public static String getAccumuloInstance()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
