@@ -326,4 +326,25 @@ public class AccumuloForeman
 		return toRet;
 	}
 
+	public void setAuths(String defaultAuths) throws RepositoryException
+	{
+		try
+		{
+			this.getConnector().securityOperations().changeUserAuthorizations(Constants.getAccumuloUser(), new Authorizations(Constants.getDefaultAuths()));
+		}
+		catch (AccumuloException e)
+		{
+			String gripe ="Failed to set auths for root";
+			log.log(Level.SEVERE,gripe,e);
+			throw new RepositoryException(gripe,e);
+		}
+		catch (AccumuloSecurityException e)
+		{
+			String gripe ="Failed to set auths for root";
+			log.log(Level.SEVERE,gripe,e);
+			throw new RepositoryException(gripe,e);
+		}
+		
+	}
+
 }

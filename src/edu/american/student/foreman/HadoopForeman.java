@@ -37,8 +37,7 @@ public class HadoopForeman
 {
 	private final static Logger log = Logger.getLogger(HadoopForeman.class.getName());
 
-	@SuppressWarnings(
-	{ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Job getHadoopJob(HadoopJobConfiguration conf) throws HadoopException
 	{
 		Job job;
