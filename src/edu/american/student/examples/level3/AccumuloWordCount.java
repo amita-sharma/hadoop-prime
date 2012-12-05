@@ -48,6 +48,24 @@ import edu.american.student.foreman.AccumuloForeman;
 import edu.american.student.foreman.HadoopForeman;
 import edu.american.student.util.AccumuloAdministrator;
 
+/**
+ * Difficulty: 3 - Intermediate
+ * Full Explanation: FIXME
+ * Relevant Files: example-resources/alice.txt
+ * Uses: Hadoop 1.0.3, Accumulo 1.4.1
+ * 
+ * Short Description: AccumuloEntryAdderMapper will add each line of alice.txt into the default Accumulo Table
+ * AccumuloWordCountMapper will iterate over those entries in Accumulo and send instances of each word per entry (therefore, per line)
+ * We reuse a reduer from HadoopWordCount to print the total word counts
+ * 
+ * An entry in the default table of accumulo for each mapper is created;
+ * ROW= <UUID>
+ * COLUMN FAMILY= "LINE"
+ * COLUMN QUALIFIER= <Line Number>
+ * VALUE= <line contents>
+ * @author cam
+ *
+ */
 public class AccumuloWordCount
 {
 
@@ -55,6 +73,7 @@ public class AccumuloWordCount
 
 	public static void main(String[] args) throws RepositoryException, HadoopException
 	{
+		//Clean the default accumulo table
 		AccumuloAdministrator.setup();
 		aForeman.connect();
 
@@ -75,20 +94,38 @@ public class AccumuloWordCount
 		HadoopJobConfiguration conf = new HadoopJobConfiguration();
 		conf.setJobName(HadoopJobConfiguration.buildJobName(AccumuloHelloWorld.class) + AccumuloWordCountMapper.class.getName());
 		conf.setMapperClass(AccumuloWordCountMapper.class);
-		conf.setReducerClass(HadoopWordCountReducer.class);
-		conf.overrideDefaultTable(Constants.getDefaultTable());
+		conf.setReducerClass(HadoopWordCountReducer.class); //Reuse a previous Reducer
+		
+		/*
+		 * Below we are telling Accumulo which entries to look over.
+		 * Grab every entry with the Column Family: LINE
+		 * and grab every Column Qualifier from those entries (hence null)
+		 */
 		Collection<Pair<Text, Text>> cfPairs = new ArrayList<Pair<Text, Text>>();
 		cfPairs.add(new Pair<Text, Text>(new Text("LINE"), null));
 		conf.setFetchColumns(cfPairs);
+		
+		
 		conf.setInputFormatClass(AccumuloInputFormat.class);
 		conf.setOutputFormatClass(NullOutputFormat.class);
 		conf.setOutputKeyClass(Text.class);
 		conf.setOutputValueClass(IntWritable.class);
 		conf.setNumReduceTasks(1);
-		hForeman = new HadoopForeman();
+		
 		hForeman.runJob(conf);
 	}
 
+	/**
+	 * Each Mapper will receive a line of alice.txt.
+	 * Add an entry to Accumulo
+	 * 
+	 * ROW= <UUID>
+	 * COLUMN FAMILY= "LINE"
+	 * COLUMN QUALIFIER= <Line Number>
+	 * VALUE= <line contents>
+	 * @author cam
+	 *
+	 */
 	public static class AccumuloEntryAdderMapper extends Mapper<LongWritable, Text, NullWritable, NullWritable>
 	{
 		@Override
@@ -114,11 +151,20 @@ public class AccumuloWordCount
 		}
 	}
 
+	/**
+	 * Each Mapper will receive a single entry in Accumulo.
+	 * That entry's value is a line from alice.txt
+	 * Use the same logic to count the number of instances per word as we did previously
+	 * @author cam
+	 *
+	 */
 	public static class AccumuloWordCountMapper extends Mapper<Key, Value,Text,IntWritable>
 	{
 		@Override
 		public void map(Key ik, Value iv, Context context)
 		{
+			//Key ik represents ROW:COLUMN FAMILY:COLUMN QUALIFER:AUTHORIZATIONS
+			//VALUE iv represents the data held there in Accumulo
 			String value = iv.toString();
 			String[] words = value.split(" ");
 			// This is a dictionary, it works like this [myWord: instancesOfMyWord]
