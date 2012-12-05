@@ -9,6 +9,9 @@ public abstract class ProcessConfiguration
 
 	List<File> ingestFilesToProcess = new ArrayList<File>();
 	Class<?> ingestMapper ;
+	Class<?> indexMapper;
+	Class<?> searchMapper;
+	String searchTerm;
 	
 	public List<File> getIngestFilesToProcess()
 	{
@@ -18,5 +21,20 @@ public abstract class ProcessConfiguration
 	public Class<?> getIngestMapper()
 	{
 		return ingestMapper;
+	}
+	
+	public Class<?> getIndexMapper()
+	{
+		return indexMapper;
+	}
+	
+	public Class<?> getSearchMapper()
+	{
+		return searchMapper;
+	}
+	
+	public String getSearchTerm()
+	{
+		return this.searchTerm;
 	}
 }
