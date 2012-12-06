@@ -56,7 +56,6 @@ public class IngestProcessing
 
 	public static void main(String[] args) throws ProcessException
 	{
-		AccumuloAdministrator.setup();
 		aForeman.connect();
 		//walk through the ingest directory
 		String[] dirContents = directoryToProcess.list();

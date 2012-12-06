@@ -9,7 +9,12 @@ public enum Constants
 	DEFAULT_ACCUMULO_INSTANCE("mnemosyne"),
 	
 	DEFAULT_ZOOKEEPER_INSTANCE_NAME("mnemosyne"),
-	DEFAULT_ZOOKEEPER_INSTANCE("127.0.0.1");
+	DEFAULT_ZOOKEEPER_INSTANCE("127.0.0.1"), 
+	
+	TWITTER_OAUTH_CONSUMER_KEY("Ax0OLrkZeTv55jL4JMaTcg"),
+	TWITTER_OAUTH_CONSUMER_SECRET("Myzm9mLt4hrpchUbHXBtEJZytan2oOgTUTJrPYmqBo"),
+	TWITTER_OAUTH_ACCESS_TOKEN("588434671-7iAor9RjYnfKREv06HRL6xCRkN6TiDQXvabjuxP1"), 
+	TWITTER_OAUTH_ACESS_TOKEN_SECRET("1NEHHADQ8p6rj3N0aTpv9ols333v4uSEAtviiZESSuQ");
 
 	private String name = "";
 
@@ -56,6 +61,26 @@ public enum Constants
 	public static String getAccumuloInstance()
 	{
 		return DEFAULT_ACCUMULO_INSTANCE.getName();
+	}
+
+	public static String getTwitterOAuthConsumerKey()
+	{
+		return TWITTER_OAUTH_CONSUMER_KEY.getName();
+	}
+
+	public static String getTwitterOAuthConsumerSecret()
+	{
+		return TWITTER_OAUTH_CONSUMER_SECRET.getName();
+	}
+
+	public static String getTwitterOAuthAccessToken()
+	{
+		return TWITTER_OAUTH_ACCESS_TOKEN.getName();
+	}
+
+	public static String getTwitterOAuthAccessTokenSecret()
+	{
+		return TWITTER_OAUTH_ACESS_TOKEN_SECRET.getName();
 	}
 
 }
