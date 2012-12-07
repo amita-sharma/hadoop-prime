@@ -26,6 +26,7 @@ public class TwitterSpider
 		
 		Twitter twitter = tf.getInstance();
 		Query query = new Query("from:"+handle.replace("@", ""));
+		query.setCount(100);
 		QueryResult result;
 		try
 		{

@@ -12,6 +12,9 @@ public abstract class ProcessConfiguration
 	Class<?> indexMapper;
 	Class<?> searchMapper;
 	Class<?> twitterMapper;
+	Class<?> twitterWordCountMapper;
+	Class<?> twitterWordCountReducer;
+	Class<?> twitterCloudMapper;
 	String searchTerm;
 	String ingestDefintions = "";
 	
@@ -48,5 +51,20 @@ public abstract class ProcessConfiguration
 	public Class<?> getTwitterIngestMapper()
 	{
 		return this.twitterMapper;
+	}
+	
+	public Class<?> getTwitterWordCountMapper()
+	{
+		return this.twitterWordCountMapper;
+	}
+	
+	public Class<?> getTwitterWordCountReducer()
+	{
+		return this.twitterWordCountReducer;
+	}
+	
+	public Class<?> getTwitterCloudMapper()
+	{
+		return this.twitterCloudMapper;
 	}
 }
