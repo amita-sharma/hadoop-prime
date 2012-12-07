@@ -18,6 +18,7 @@
 package edu.american.student.process;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 
 import org.apache.accumulo.core.client.mapreduce.AccumuloInputFormat;
@@ -30,11 +31,18 @@ import edu.american.student.conf.HadoopJobConfiguration;
 import edu.american.student.conf.ProcessConfiguration;
 import edu.american.student.exception.ProcessException;
 import edu.american.student.foreman.HadoopForeman;
-
+/**
+ * A Hadoop prime process that launches the Twitter Tag Cloud Process
+ * @author cam
+ *
+ */
 public class TwitterTagCloudProcess implements PrimeProcess
 {
 	private Class<? extends Mapper<?,?,?,?>> mapper;
 	
+	/**
+	 * Grab relevant details for Twitter Tag Cloud Process
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initalize(ProcessConfiguration conf) throws ProcessException
@@ -43,6 +51,9 @@ public class TwitterTagCloudProcess implements PrimeProcess
 
 	}
 
+	/**
+	 * Start the Twitter Tag Cloud Process
+	 */
 	@Override
 	public void start() throws ProcessException
 	{
@@ -52,6 +63,9 @@ public class TwitterTagCloudProcess implements PrimeProcess
 		conf.setJobName(HadoopJobConfiguration.buildJobName(IndexProcess.class));
 		conf.setMapperClass(mapper);
 
+		/*
+		 * Grab all the Accumulo entries with the Column Family: TAG 
+		 */
 		Collection<Pair<Text, Text>> cfPairs = new ArrayList<Pair<Text, Text>>();
 		cfPairs.add(new Pair<Text, Text>(new Text("TAG"), null));
 		conf.setFetchColumns(cfPairs);

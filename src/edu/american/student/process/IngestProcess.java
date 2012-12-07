@@ -32,10 +32,19 @@ import edu.american.student.conf.ProcessConfiguration;
 import edu.american.student.exception.ProcessException;
 import edu.american.student.foreman.HadoopForeman;
 
+/**
+ * A Hadoop prime process that launches the common Ingest Process
+ * @author cam
+ *
+ */
 public class IngestProcess implements PrimeProcess
 {
-	private List<File> ingestFiles = new ArrayList<File>();
+	private List<File> ingestFiles = new ArrayList<File>();// list of files to process
 	private Class<? extends Mapper<?,?,?,?>> mapper = null;
+	
+	/**
+	 * Grab relevant details from the conf
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initalize(ProcessConfiguration conf) throws ProcessException
@@ -44,10 +53,19 @@ public class IngestProcess implements PrimeProcess
 		this.mapper =(Class<? extends Mapper<?, ?, ?, ?>>) conf.getIngestMapper();
 	}
 
+	/**
+	 * Launch the Ingest Process
+	 */
 	@Override
 	public void start() throws ProcessException
 	{
 		System.out.println("Ingesting "+ingestFiles.get(0).getAbsolutePath()+" ....");
+		/*
+		 * TextInputFormat - Read from a File
+		 * overridePathToProcess - The file path to process to read from
+		 * 
+		 * OutputKey, Value - Null (N/A)
+		 */
 		HadoopJobConfiguration entryAddConf = new HadoopJobConfiguration();
 		entryAddConf.setJobName(HadoopJobConfiguration.buildJobName(IngestProcess.class));
 		entryAddConf.setMapperClass(mapper);

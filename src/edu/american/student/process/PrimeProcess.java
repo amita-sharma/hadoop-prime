@@ -19,7 +19,11 @@ package edu.american.student.process;
 
 import edu.american.student.conf.ProcessConfiguration;
 import edu.american.student.exception.ProcessException;
-
+/**
+ * The interface for all Processes in this package.
+ * @author cam
+ *
+ */
 public interface PrimeProcess
 {
 

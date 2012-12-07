@@ -29,10 +29,23 @@ import twitter4j.conf.ConfigurationBuilder;
 import edu.american.student.conf.Constants;
 import edu.american.student.exception.SpiderException;
 
+/**
+ * An interface to Twitter
+ * Uses: Twitter4J 3.0.2
+ * @author cam
+ *
+ */
 public class TwitterSpider
 {
+	/**
+	 * Grabs the last 100 tweet objects (Status) from a handle
+	 * @param handle
+	 * @return
+	 * @throws SpiderException
+	 */
 	public static List<Status> spider(String handle) throws SpiderException
 	{
+		//connect to Twitter
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
 			.setOAuthConsumerKey(Constants.getTwitterOAuthConsumerKey())
@@ -42,6 +55,7 @@ public class TwitterSpider
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		
 		Twitter twitter = tf.getInstance();
+		//get  tweets
 		Query query = new Query("from:"+handle.replace("@", ""));
 		query.setCount(100);
 		QueryResult result;

@@ -21,6 +21,11 @@ import edu.american.student.conf.Constants;
 import edu.american.student.exception.RepositoryException;
 import edu.american.student.foreman.AccumuloForeman;
 
+/**
+ * A way to clean and clear Accumulo
+ * @author cam
+ *
+ */
 public class AccumuloAdministrator
 {
 
@@ -28,6 +33,11 @@ public class AccumuloAdministrator
 	{
 		AccumuloAdministrator.setup();
 	}
+	
+	/**
+	 * Clean and Clear Accumulo
+	 * @throws RepositoryException
+	 */
 	public static void setup() throws RepositoryException
 	{
 		System.out.println("Starting Accumulo Setup");

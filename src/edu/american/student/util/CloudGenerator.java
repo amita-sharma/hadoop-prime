@@ -25,9 +25,21 @@ import org.apache.commons.io.FileUtils;
 import org.mcavallo.opencloud.Cloud;
 import org.mcavallo.opencloud.Tag;
 
+/**
+ * A way to generate tag clouds
+ * Uses: Open Cloud 0.2
+ * @author cam
+ *
+ */
 public class CloudGenerator
 {
 
+	/**
+	 * Generate a Tag Cloud
+	 * @param cloud
+	 * @param saveLocation
+	 * @throws IOException
+	 */
 	public static void generateCloud(Cloud cloud, String saveLocation) throws IOException
 	{
 		List<Tag> tags =cloud.allTags();

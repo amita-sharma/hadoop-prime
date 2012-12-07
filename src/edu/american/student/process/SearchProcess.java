@@ -30,12 +30,19 @@ import edu.american.student.conf.HadoopJobConfiguration;
 import edu.american.student.conf.ProcessConfiguration;
 import edu.american.student.exception.ProcessException;
 import edu.american.student.foreman.HadoopForeman;
-
+/**
+ * A Hadoop prime process that launches the  Search Process
+ * @author cam
+ *
+ */
 public class SearchProcess implements PrimeProcess
 {
 	private Class<? extends Mapper<?,?,?,?>> mapper;
-	private String searchTerm= "";
+	private String searchTerm= "";//The term to search for
 	
+	/**
+	 * Grab relevant details for Search Process
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initalize(ProcessConfiguration conf) throws ProcessException
@@ -44,6 +51,9 @@ public class SearchProcess implements PrimeProcess
 		searchTerm = conf.getSearchTerm();
 	}
 
+	/**
+	 * Launch a Search Process
+	 */
 	@Override
 	public void start() throws ProcessException
 	{
@@ -53,12 +63,16 @@ public class SearchProcess implements PrimeProcess
 		HadoopJobConfiguration conf = new HadoopJobConfiguration();
 		conf.setJobName(HadoopJobConfiguration.buildJobName(IndexProcess.class));
 		conf.setMapperClass(mapper);
-		
+		/*
+		 * Grab all entries in Accumulo with the Column Family:INDEX ColumnQualifier:<search term>
+		 */
 		Collection<Pair<Text, Text>> cfPairs = new ArrayList<Pair<Text, Text>>();
 		cfPairs.add(new Pair<Text, Text>(new Text("INDEX"), new Text(searchTerm.toLowerCase())));
 		conf.setFetchColumns(cfPairs);
 		
-		
+		/*
+		 * Input comes from Accumulo. Output is Null (N/A)
+		 */
 		conf.setInputFormatClass(AccumuloInputFormat.class);
 		conf.setOutputFormatClass(NullOutputFormat.class);
 		

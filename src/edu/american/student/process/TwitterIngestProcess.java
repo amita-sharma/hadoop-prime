@@ -29,11 +29,19 @@ import edu.american.student.conf.ProcessConfiguration;
 import edu.american.student.exception.ProcessException;
 import edu.american.student.foreman.HadoopForeman;
 
+/**
+ * A Hadoop prime process that launches the Twitter Ingest Process
+ * @author cam
+ *
+ */
 public class TwitterIngestProcess implements PrimeProcess
 {
-	private String twitterIngestDefintions = "";
+	private String twitterIngestDefintions = "";//the file path to the twitter Defintions file
 	private Class<? extends Mapper<?,?,?,?>> mapper;
 	
+	/**
+	 * Grab relevant details for Twitter Ingest
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initalize(ProcessConfiguration conf) throws ProcessException
@@ -43,6 +51,9 @@ public class TwitterIngestProcess implements PrimeProcess
 		
 	}
 
+	/**
+	 * Start the Twitter Ingest Process
+	 */
 	@Override
 	public void start() throws ProcessException
 	{
@@ -50,8 +61,10 @@ public class TwitterIngestProcess implements PrimeProcess
 		HadoopJobConfiguration entryAddConf = new HadoopJobConfiguration();
 		entryAddConf.setJobName(HadoopJobConfiguration.buildJobName(IngestProcess.class));
 		entryAddConf.setMapperClass(mapper);
+		
 		entryAddConf.setInputFormatClass(TextInputFormat.class);
 		entryAddConf.overridePathToProcess(new Path(twitterIngestDefintions));
+		
 		entryAddConf.setOutputFormatClass(AccumuloOutputFormat.class);
 		entryAddConf.setOutputKeyClass(Text.class);
 		entryAddConf.setOutputValueClass(Mutation.class);

@@ -31,18 +31,27 @@ import edu.american.student.conf.ProcessConfiguration;
 import edu.american.student.exception.ProcessException;
 import edu.american.student.foreman.HadoopForeman;
 
+/**
+ * A Hadoop prime process that launches IndexProcessing
+ * @author cam
+ *
+ */
 public class IndexProcess implements PrimeProcess
 {
+	//A holder for the mapper
 	private Class<? extends Mapper<?, ?, ?, ?>> mapper;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initalize(ProcessConfiguration conf) throws ProcessException
 	{
-		mapper = ((Class<? extends Mapper<?, ?, ?, ?>>) conf.getIndexMapper());
+		mapper = ((Class<? extends Mapper<?, ?, ?, ?>>) conf.getIndexMapper());//set the Mapper
 
 	}
 
+	/**
+	 * Starts the Index Process
+	 */
 	@Override
 	public void start() throws ProcessException
 	{
@@ -54,14 +63,15 @@ public class IndexProcess implements PrimeProcess
 		conf.setJobName(HadoopJobConfiguration.buildJobName(IndexProcess.class));
 		conf.setMapperClass(mapper);
 		
+		//Send the mapper all entries that contain the Column Family: LINE
 		Collection<Pair<Text, Text>> cfPairs = new ArrayList<Pair<Text, Text>>();
 		cfPairs.add(new Pair<Text, Text>(new Text("LINE"), null));
 		conf.setFetchColumns(cfPairs);
 		
-		
+		//Input is Accumulo, Output is Null
 		conf.setInputFormatClass(AccumuloInputFormat.class);
 		conf.setOutputFormatClass(NullOutputFormat.class);
-		
+		//Run it!
 		hForeman.runJob(conf);
 
 

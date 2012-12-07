@@ -33,11 +33,19 @@ import edu.american.student.conf.ProcessConfiguration;
 import edu.american.student.exception.ProcessException;
 import edu.american.student.foreman.HadoopForeman;
 
+/**
+ * A Hadoop prime process that launches the Twitter Word Count Process
+ * @author cam
+ *
+ */
 public class TwitterWordCountProcess implements PrimeProcess
 {
 	private Class<? extends Mapper<?,?,?,?>> mapper;
 	private Class<? extends Reducer<?,?,?,?>> reducer;
 	
+	/**
+	 * Grab relevant details for Twitter Word Count Process
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initalize(ProcessConfiguration conf) throws ProcessException
@@ -47,6 +55,9 @@ public class TwitterWordCountProcess implements PrimeProcess
 		
 	}
 
+	/**
+	 * Launch a Twitter Word Count Process
+	 */
 	@Override
 	public void start() throws ProcessException
 	{
@@ -58,6 +69,9 @@ public class TwitterWordCountProcess implements PrimeProcess
 		conf.setMapperClass(mapper);
 		conf.setReducerClass(reducer);
 		
+		/**
+		 * Grab all Accumulo entries with Column Family:LINE
+		 */
 		Collection<Pair<Text, Text>> cfPairs = new ArrayList<Pair<Text, Text>>();
 		cfPairs.add(new Pair<Text, Text>(new Text("LINE"), null));
 		conf.setFetchColumns(cfPairs);
