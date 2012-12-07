@@ -28,7 +28,7 @@ import org.mcavallo.opencloud.Tag;
 public class CloudGenerator
 {
 
-	public static void generateCloud(Cloud cloud, String string) throws IOException
+	public static void generateCloud(Cloud cloud, String saveLocation) throws IOException
 	{
 		List<Tag> tags =cloud.allTags();
 		String html = "";
@@ -44,7 +44,7 @@ public class CloudGenerator
 			 }
 			 i++;
 		}
-		FileUtils.writeByteArrayToFile(new File("/home/cam/Desktop/tagcloud.html"), html.getBytes());
+		FileUtils.writeByteArrayToFile(new File(saveLocation), html.getBytes());
 	}
 
 	

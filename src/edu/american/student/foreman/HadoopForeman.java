@@ -33,11 +33,21 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import edu.american.student.conf.HadoopJobConfiguration;
 import edu.american.student.exception.HadoopException;
 import edu.american.student.conf.Constants;
-
+/**
+ * A Foreman which controls Hadoop Jobs
+ * @author cam
+ *
+ */
 public class HadoopForeman
 {
 	private final static Logger log = Logger.getLogger(HadoopForeman.class.getName());
 
+	/**
+	 * Creates a native hadoop job given a HadoopJobConfiguration
+	 * @param conf
+	 * @return
+	 * @throws HadoopException
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Job getHadoopJob(HadoopJobConfiguration conf) throws HadoopException
 	{
@@ -105,6 +115,12 @@ public class HadoopForeman
 
 	}
 
+	/**
+	 * Runs a Hadoop job!
+	 * @param hConfig
+	 * @return
+	 * @throws HadoopException
+	 */
 	public boolean runJob(HadoopJobConfiguration hConfig) throws HadoopException
 	{
 		try

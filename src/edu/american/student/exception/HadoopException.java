@@ -17,6 +17,11 @@
  */
 package edu.american.student.exception;
 
+/**
+ * Thrown when something odd happens with Hadoop
+ * @author cam
+ *
+ */
 public class HadoopException extends ProcessException
 {
 

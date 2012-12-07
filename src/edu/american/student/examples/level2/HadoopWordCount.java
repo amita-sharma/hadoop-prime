@@ -29,10 +29,16 @@ import edu.american.student.exception.StopMapperException;
 import edu.american.student.foreman.HadoopForeman;
 
 /**
- * Difficulty: 2 - Beginner Full Explanation: FIXME Relevant Files: example-resources/alice.txt Uses: Hadoop 1.0.3 Short
- * Description: Each Mapper will take a line of test from alice.txt. It will deconstruct it into terms, count how many
- * times that word happens in the line It passes the Reducer key-value pairs that are word:numberOfLineInstances. The
- * Reducer will add up the total instances of each word and print
+ * Difficulty: 2 - Beginner 
+ * 
+ * Full Explanation: FIXME 
+ * Relevant Files: example-resources/alice.txt Uses: Hadoop 1.0.3 
+ * 
+ * Short Description: Each Mapper will take a line of test from alice.txt. 
+ * It will deconstruct it into terms, count how many times that word happens in the line 
+ * 
+ * It passes the Reducer key-value pairs that are word:numberOfLineInstances. 
+ * The Reducer will add up the total instances of each word and print
  * 
  * @author cam
  */

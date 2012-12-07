@@ -41,9 +41,9 @@ import edu.american.student.foreman.HadoopForeman;
  * Relevant Files: example-resources/sortme.txt
  * Uses: Hadoop 1.0.3
  * 
- * Short Description: Each node in the cluster will print out the piece it got.
+ * Short Description: Each node in the cluster will print out the piece it got. 
  * The key is what Hadoop considers the line number. The value is the text at that position.
- * The Mapper will break down the line into several numbers and sent lineNumber:number pairs to the Reducer.
+ * The Mapper will break down the line into several numbers and sent [lineNumber:number] pairs to the Reducer.
  * 
  * The Reducer then will grab all the key-values with the same key (same line number), then sort the list. 
  * Printing out the largest value in the list per line
@@ -55,6 +55,7 @@ public class HadoopLargestNumber
 
 	public static void main(String[] args) throws HadoopException
 	{
+		//Create a Job Configuration 
 		HadoopJobConfiguration conf = new HadoopJobConfiguration();
 		conf.setJobName(HadoopJobConfiguration.buildJobName(HadoopLargestNumber.class));
 		conf.setMapperClass(HadoopLargestNumberMapper.class);
@@ -64,7 +65,7 @@ public class HadoopLargestNumber
 
 		/*This time, we have a Reducer. It doesn't write files or anything,
 		 * So NullOutputFormat is what we choose.
-		 * The Reducer need to know what kind of key-value pairs I should expect.
+		 * The Reducer need to know what kind of key-value pairs it should expect.
 		 * Because we are passing it a line number as a key, its KeyClass is IntWritable
 		 * Each line number will have several numbers that have been parsed out of the line
 		 * So each value passed to a single reducer will also be an integer, its ValueClass is IntWritable

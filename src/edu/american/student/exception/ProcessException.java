@@ -17,6 +17,11 @@
  */
 package edu.american.student.exception;
 
+/**
+ * Thrown when a Process throws up
+ * @author cam
+ *
+ */
 public abstract class ProcessException extends Exception
 {
 

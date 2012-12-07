@@ -45,6 +45,17 @@ import edu.american.student.process.TwitterTagCloudProcess;
 import edu.american.student.process.TwitterWordCountProcess;
 import edu.american.student.util.CloudGenerator;
 
+/**
+ * Difficulty: 5 - Expert
+ * Full Explanation: FIXME
+ * Relevant Files: example-resources/example-resources/gen/
+ * Uses: Hadoop 1.0.3, Accumulo 1.4.1
+ * 
+ * Short Description: 
+ * 
+ * @author cam
+ *
+ */
 public class TwitterTagCloudProcessing
 {
 	private static AccumuloForeman aForeman = new AccumuloForeman();
@@ -53,13 +64,16 @@ public class TwitterTagCloudProcessing
 	public static void main(String[] args) throws ProcessException, IOException
 	{
 		aForeman.connect();
-		cloud.setMaxWeight(38.0);
-		cloud.setMinWeight(10.0);
-		cloud.setThreshold(0.0);
-		cloud.tags(new Tag.ScoreComparatorDesc());
-		cloud.setDefaultLink("http://www.google.com/");
-		ProcessForeman.ingestTwitter();
+		//Configure a Open Cloud Instance
+		cloud.setMaxWeight(38.0);//Max Font Size
+		cloud.setMinWeight(10.0);//Min Font Size
+		cloud.setThreshold(0.0);//Score minimum to display
+		cloud.setDefaultLink("http://www.google.com/");// They show up as links. They all link to google
+		ProcessForeman.ingestTwitter();//ingest all our twitter data from spidering
 		
+		/*
+		 * This process counts the number of instances of each word and saves them as TAGs
+		 */
 		TwitterWordCountConfiguration conf = new TwitterWordCountConfiguration();
 		conf.setTwitterWordCountMapper(TwitterWordCountMapper.class);
 		conf.setTwitterWordCountReducer(TwitterWordCountReducer.class);
@@ -68,21 +82,22 @@ public class TwitterTagCloudProcessing
 		wordCountProcess.initalize(conf);
 		wordCountProcess.start();
 		
+		/*
+		 * This process goes through the TAGs. Then adds tags to the open cloud instance
+		 */
 		TwitterCloudConfiguration tagCloudConf = new TwitterCloudConfiguration();
-		
 		tagCloudConf.setTwitterCloudMapper(TwitterTagCloudMapper.class);
 		
 		TwitterTagCloudProcess tagCloudProcess = new TwitterTagCloudProcess();
 		tagCloudProcess.initalize(tagCloudConf);
 		tagCloudProcess.start();
 		
+		//Generates the cloud using open cloud. Pass it where you want it to save
 		CloudGenerator.generateCloud(cloud,"example-resources/gen");
 	}
-	/*
-	 * ROW: <twitterHandle><UUID>
-	 * COLUMN FAMILY: "LINE" // this is to stay consistent with our previous Ingest
-	 * COLUMN QUALIFIER: <twitterHandle>
-	 * VALUE: Tweet's text
+	/**
+	 * Each Mapper receives a LINE column family entry.
+	 * Splits up the line into words, organizes them by number of instance and sends them to the Reducer
 	 * @author cam
 	 *
 	 */
@@ -132,6 +147,16 @@ public class TwitterTagCloudProcessing
 		}
 	}
 
+	/**
+	 * Each Reducer counts the total instances of a word (tag) for a file. then adds them to Accumulo
+	 * 
+	 * ROW: TAG
+	 * COLUMN FAMILY: TAG
+	 * COLUMN QUALIFER: <word>
+	 * VALUE: <instance count>
+	 * @author cam
+	 *
+	 */
 	public static class TwitterWordCountReducer extends Reducer<Text,IntWritable,NullWritable,NullWritable>
 	{
 		@Override

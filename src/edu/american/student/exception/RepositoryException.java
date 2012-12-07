@@ -17,12 +17,14 @@
  */
 package edu.american.student.exception;
 
+/**
+ * Thrown when Accumulo acts funny
+ * @author cam
+ *
+ */
 public class RepositoryException extends DataspaceException
 {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7547386405340454597L;
 
 	public RepositoryException(String message)

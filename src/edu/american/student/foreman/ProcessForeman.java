@@ -22,30 +22,50 @@ import edu.american.student.examples.level4.IngestProcessing;
 import edu.american.student.examples.level5.TwitterIngest;
 import edu.american.student.exception.ProcessException;
 
+/**
+ * A Foreman for controlling your processes
+ * @author cam
+ *
+ */
 public class ProcessForeman
 {
 
+	/**
+	 * Common ingest
+	 * @throws ProcessException
+	 */
 	public static void ingest() throws ProcessException
 	{
 		IngestProcessing.main(null);
 	}
 
+	/**
+	 * Common index
+	 * @throws ProcessException
+	 */
 	public static void index() throws ProcessException
 	{
 		IndexProcessing.main(null);
 		
 	}
 
+	/**
+	 * Twitter Ingest
+	 * @throws ProcessException
+	 */
 	public static void ingestTwitter() throws ProcessException
 	{
 		TwitterIngest.main(null);
 		
 	}
 
+	/**
+	 * Twitter Index
+	 * @throws ProcessException
+	 */
 	public static void indexTwitter() throws ProcessException
 	{
 		IndexProcessing.main(null);
-		
 	}
 
 }

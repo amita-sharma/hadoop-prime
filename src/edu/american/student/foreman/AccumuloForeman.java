@@ -46,18 +46,24 @@ import org.apache.hadoop.io.Text;
 
 import edu.american.student.conf.Constants;
 import edu.american.student.exception.RepositoryException;
-
+/**
+ * A Foreman responsible for interacting with the Accumulo Database
+ * @author cam
+ */
 public class AccumuloForeman
 {
 
-	private Connector conn;
+	private Connector conn;//A true connection to the database
 	private static final Logger log = Logger.getLogger(AccumuloForeman.class.getName());
 
-	public AccumuloForeman()
-	{
+	public AccumuloForeman(){}
 
-	}
-
+	/**
+	 * Allow the AccumuloForeman to connect to Accumulo
+	 * MUST BE CALLED BEFORE ANYTHING ELSE HAPPENS
+	 * @return
+	 * @throws RepositoryException
+	 */
 	@SuppressWarnings("deprecation")
 	public boolean connect() throws RepositoryException
 	{
@@ -81,6 +87,12 @@ public class AccumuloForeman
 		return true;
 	}
 
+	/**
+	 * Grabs the underlying connection to the database.
+	 * You probably don't need this
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public Connector getConnector() throws RepositoryException
 	{
 		if (conn == null)
@@ -92,6 +104,12 @@ public class AccumuloForeman
 		return conn;
 	}
 
+	/**
+	 * Grabs the connection to all the tables.
+	 * You probably won't need this
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public TableOperations getTableOps() throws RepositoryException
 	{
 		if (conn == null || conn.tableOperations() == null)
@@ -103,6 +121,11 @@ public class AccumuloForeman
 		return conn.tableOperations();
 	}
 
+	/**
+	 * Wipes and deletes all the tables except for !METADATA
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public boolean deleteTables() throws RepositoryException
 	{
 		Map<String, String> tableMap = this.getTableOps().tableIdMap();
@@ -119,6 +142,12 @@ public class AccumuloForeman
 		return true;
 	}
 
+	/**
+	 * Deletes an individual table
+	 * @param name
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public boolean deleteTable(String name) throws RepositoryException
 	{
 		TableOperations tableOps = this.getTableOps();
@@ -148,6 +177,13 @@ public class AccumuloForeman
 		return true;
 	}
 
+	/**
+	 * Grabs the batch writer. 
+	 * Youll need this if you want to write massive amounts of data at once
+	 * @param tableName
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public BatchWriter getBatchWriter(String tableName) throws RepositoryException
 	{
 		long memBuf = 1000000L; // bytes to store before sending a batch
@@ -168,6 +204,15 @@ public class AccumuloForeman
 		return writer;
 	}
 
+	/**
+	 * A more primative add(). It requires a byte[] for its value
+	 * @param table
+	 * @param row
+	 * @param fam
+	 * @param qual
+	 * @param value
+	 * @throws RepositoryException
+	 */
 	public void addBytes(String table, String row, String fam, String qual, byte[] value) throws RepositoryException
 	{
 		BatchWriter writer = this.getBatchWriter(table);
@@ -189,12 +234,26 @@ public class AccumuloForeman
 
 	}
 
+	/**
+	 * Add an entry to Accumulo
+	 * @param table
+	 * @param row
+	 * @param fam
+	 * @param qual
+	 * @param value
+	 * @throws RepositoryException
+	 */
 	public void add(String table, String row, String fam, String qual, String value) throws RepositoryException
 	{
 		this.addBytes(table, row, fam, qual, value.getBytes());
 
 	}
 
+	/**
+	 * Creates a table
+	 * @param tableName
+	 * @throws RepositoryException
+	 */
 	public void makeTable(String tableName) throws RepositoryException
 	{
 		TableOperations tableOps = this.getTableOps();
@@ -225,6 +284,14 @@ public class AccumuloForeman
 
 	}
 
+	/**
+	 * Grab a List of entries by table, Row and Column Family
+	 * @param table
+	 * @param row
+	 * @param fam
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public List<Entry<Key, Value>> fetchByRowColumnFamily(String table, String row, String fam) throws RepositoryException
 	{
 		Authorizations auths = new Authorizations(Constants.getDefaultAuths());
@@ -251,6 +318,13 @@ public class AccumuloForeman
 		return toRet;
 	}
 
+	/**
+	 * Grab all entries by a common Column Family
+	 * @param table
+	 * @param fam
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public List<Entry<Key, Value>> fetchByColumnFamily(String table, String fam) throws RepositoryException
 	{
 		Authorizations auths = new Authorizations(Constants.getDefaultAuths());
@@ -276,6 +350,14 @@ public class AccumuloForeman
 		return toRet;
 	}
 
+	/**
+	 * Grabs all the entries by a common column family and column qualifier
+	 * @param table
+	 * @param fam
+	 * @param qual
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public List<Entry<Key, Value>> fetchByQualifier(String table, String fam, String qual) throws RepositoryException
 	{
 		Authorizations auths = new Authorizations(Constants.getDefaultAuths());
@@ -300,11 +382,26 @@ public class AccumuloForeman
 		return toRet;
 	}
 
+	/**
+	 * Returns true if a table exists
+	 * @param name
+	 * @return
+	 * @throws RepositoryException
+	 */
 	public boolean tableExists(String name) throws RepositoryException
 	{
 		return this.getTableOps().exists(name);
 	}
 
+	/**
+	 * Fetch entries with a common table and family and a regex (starts with) qualifier
+	 * @param table
+	 * @param row
+	 * @param fam
+	 * @param qualifierRegex
+	 * @return
+	 * @throws RepositoryException
+	 */
 	@SuppressWarnings("unused")
 	private List<Entry<Key, Value>> fetchByRowColumnQualifier(String table, String row, String fam, String qualifierRegex) throws RepositoryException
 	{
@@ -336,6 +433,11 @@ public class AccumuloForeman
 		return toRet;
 	}
 
+	/**
+	 * Adds/Sets the authorizations for the default accumulo user
+	 * @param defaultAuths
+	 * @throws RepositoryException
+	 */
 	public void setAuths(String defaultAuths) throws RepositoryException
 	{
 		try

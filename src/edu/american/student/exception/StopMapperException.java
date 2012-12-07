@@ -17,6 +17,11 @@
  */
 package edu.american.student.exception;
 
+/**
+ * Stops Hadoop from continuing a job!
+ * @author cam
+ *
+ */
 public class StopMapperException extends RuntimeException
 {
 
