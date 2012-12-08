@@ -33,7 +33,7 @@ import edu.american.student.foreman.HadoopForeman;
  * Start Here
  * 
  * Difficulty: 1 - Simple
- * Full Explanation: FIXME
+ * Full Explanation: https://github.com/Ccook/hadoop-prime/wiki/Level-1:-Simple-%28Start-coding-here!%29
  * Relevant Files: example-resources/hello_world.txt
  * Uses: Hadoop 1.0.3
  * 
