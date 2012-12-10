@@ -43,7 +43,7 @@ import edu.american.student.foreman.HadoopForeman;
  * 
  * Short Description: Each node in the cluster will print out the piece it got. 
  * The key is what Hadoop considers the line number. The value is the text at that position.
- * The Mapper will break down the line into several numbers and sent [lineNumber:number] pairs to the Reducer.
+ * The Mapper will break down the line into several numbers and send [lineNumber:number] pairs to the Reducer.
  * 
  * The Reducer then will grab all the key-values with the same key (same line number), then sort the list. 
  * Printing out the largest value in the list per line

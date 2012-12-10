@@ -32,6 +32,7 @@ import edu.american.student.exception.RepositoryException;
 import edu.american.student.exception.StopMapperException;
 import edu.american.student.foreman.AccumuloForeman;
 import edu.american.student.foreman.HadoopForeman;
+import edu.american.student.util.AccumuloAdministrator;
 
 /**
  * Difficulty: 3 - Intermediate
@@ -59,7 +60,7 @@ public class AccumuloHelloWorld
 	{
 		//Connect to the Accumulo Foreman
 		aForeman.connect();
-		
+		AccumuloAdministrator.setup();
 		HadoopJobConfiguration conf = new HadoopJobConfiguration();
 		conf.setJobName(HadoopJobConfiguration.buildJobName(AccumuloHelloWorld.class));	
 		conf.setMapperClass(AccumuloHelloWorldMapper.class);
