@@ -61,6 +61,7 @@ public class AccumuloHelloWorld
 		//Connect to the Accumulo Foreman
 		aForeman.connect();
 		AccumuloAdministrator.setup();
+		
 		HadoopJobConfiguration conf = new HadoopJobConfiguration();
 		conf.setJobName(HadoopJobConfiguration.buildJobName(AccumuloHelloWorld.class));	
 		conf.setMapperClass(AccumuloHelloWorldMapper.class);
