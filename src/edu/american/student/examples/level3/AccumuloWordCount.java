@@ -56,7 +56,7 @@ import edu.american.student.util.AccumuloAdministrator;
  * 
  * Short Description: AccumuloEntryAdderMapper will add each line of alice.txt into the default Accumulo Table
  * AccumuloWordCountMapper will iterate over those entries in Accumulo and send instances of each word per entry (therefore, per line)
- * We reuse a reduer from HadoopWordCount to print the total word counts
+ * We reuse a reducer from HadoopWordCount to print the total word counts
  * 
  * An entry in the default table of accumulo for each mapper is created;
  * ROW= <UUID>

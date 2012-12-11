@@ -31,6 +31,7 @@ import edu.american.student.exception.RepositoryException;
 import edu.american.student.exception.StopMapperException;
 import edu.american.student.foreman.AccumuloForeman;
 import edu.american.student.process.IngestProcess;
+import edu.american.student.util.AccumuloAdministrator;
 
 /**
  * Difficulty: 4 - Advanced
@@ -55,6 +56,7 @@ public class IngestProcessing
 
 	public static void main(String[] args) throws ProcessException
 	{
+		AccumuloAdministrator.setup();
 		aForeman.connect();
 		//walk through the ingest directory
 		String[] dirContents = directoryToProcess.list();
