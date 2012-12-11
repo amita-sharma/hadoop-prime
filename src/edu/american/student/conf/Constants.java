@@ -66,7 +66,7 @@ public enum Constants
 	/*
 	 * The instance name (not the instance itself) of zookeeper
 	 */
-	DEFAULT_ZOOKEEPER_INSTANCE_NAME("localhost"),
+	DEFAULT_ZOOKEEPER_INSTANCE_NAME("mnemosyne"),
 	
 	/*
 	 * The instance itself, it  should be an IP.
