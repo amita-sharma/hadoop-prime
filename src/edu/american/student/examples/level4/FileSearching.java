@@ -55,7 +55,6 @@ public class FileSearching
 		process.start();
 		
 		
-		
 	}
 	/**
 	 * Each mapper is given an entry where the CF:CQ pairs are INDEX:<search term>
