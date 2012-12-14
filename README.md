@@ -1,12 +1,6 @@
 hadoop-prime
 ============
-
-A simple Hadoop framework to teach Hadoop to freshman CS students
-
-Progress
-========
-hadoop-prime is in beta testing. While all of the code is documented and complete,
-The tutorial itself, featured in the wiki, is not.
-
-It should be done by Friday 14, 2012.
+<br>
+A simple Hadoop framework to teach Hadoop to freshman CS students<br>
+<a href="https://github.com/Ccook/hadoop-prime/wiki">Go to the wiki!</a><br>
 -Cam (cam.cook@linux.com)
