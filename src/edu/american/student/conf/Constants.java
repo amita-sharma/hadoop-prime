@@ -79,7 +79,7 @@ public enum Constants
 	 * You get this from https://dev.twitter.com/
 	 * See:https://github.com/Ccook/hadoop-prime/wiki/Level-5:-Expert-:-TwitterIngest
 	 */
-	TWITTER_OAUTH_CONSUMER_KEY("*******************"),
+	TWITTER_OAUTH_CONSUMER_KEY("Ax0OLrkZeTv55jL4JMaTcg"),
 	
 	/*
 	 * A Twitter OAUTH Consumer Secret
@@ -87,7 +87,7 @@ public enum Constants
 	 * You get this from https://dev.twitter.com/
 	 * See:https://github.com/Ccook/hadoop-prime/wiki/Level-5:-Expert-:-TwitterIngest
 	 */
-	TWITTER_OAUTH_CONSUMER_SECRET("**********************************"),
+	TWITTER_OAUTH_CONSUMER_SECRET("Myzm9mLt4hrpchUbHXBtEJZytan2oOgTUTJrPYmqBo"),
 	
 	/*
 	 * A Twitter OAUTH Access Token
@@ -95,7 +95,7 @@ public enum Constants
 	 * You get this from https://dev.twitter.com/
 	 * See:https://github.com/Ccook/hadoop-prime/wiki/Level-5:-Expert-:-TwitterIngest
 	 */
-	TWITTER_OAUTH_ACCESS_TOKEN("********************"), 
+	TWITTER_OAUTH_ACCESS_TOKEN("588434671-7iAor9RjYnfKREv06HRL6xCRkN6TiDQXvabjuxP1"), 
 	
 	/*
 	 * A Twitter OAUTH Access Token Secret
@@ -103,7 +103,7 @@ public enum Constants
 	 * You get this from https://dev.twitter.com/
 	 * See: https://github.com/Ccook/hadoop-prime/wiki/Level-5:-Expert-:-TwitterIngest
 	 */
-	TWITTER_OAUTH_ACESS_TOKEN_SECRET("**********************");
+	TWITTER_OAUTH_ACESS_TOKEN_SECRET("1NEHHADQ8p6rj3N0aTpv9ols333v4uSEAtviiZESSuQ");
 
 	private String name = "";
 

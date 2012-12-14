@@ -51,7 +51,10 @@ import edu.american.student.util.CloudGenerator;
  * Relevant Files: example-resources/example-resources/gen/
  * Uses: Hadoop 1.0.3, Accumulo 1.4.1
  * 
- * Short Description: 
+ * Short Description: We will ingest from twitter.
+ * TwitterWordCountProcess starts, it will count each instance of a word per tweet, then collect those words together in Accumulo
+ * TwitterTagCloudProcess starts, it will take entries of each word count and make a Tag cloud with it
+ * 
  * 
  * @author cam
  *
